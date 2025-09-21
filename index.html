@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GloSpot - AI Sports Talent Assessment</title>
+    <meta name="description" content="AI-powered sports talent assessment platform">
+    <meta name="theme-color" content="#dc2626">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GloSpot">
+    <meta name="msapplication-TileColor" content="#dc2626">
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-32x32.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Main Content Container -->
+        <div id="main-content">
+            <!-- Pages will be loaded here -->
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottom-nav" style="display: none;">
+            <div class="nav-item active" data-page="home">
+                <div class="nav-icon">🏠</div>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" data-page="all-tests">
+                <div class="nav-icon">🏋️</div>
+                <span>All Tests</span>
+            </div>
+            <div class="nav-item" data-page="profile">
+                <div class="nav-icon">👤</div>
+                <span>Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- MediaPipe processing is handled in the backend, no frontend dependency needed -->
+    
+    <script src="app.js?v=8"></script>
+</body>
+</html>

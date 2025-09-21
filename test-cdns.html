@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDN Test</title>
+</head>
+<body>
+    <h1>MediaPipe CDN Test</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const resultsDiv = document.getElementById('results');
+        
+        async function testCDN(name, url) {
+            try {
+                console.log(`Testing ${name}...`);
+                const { PoseLandmarker, FilesetResolver, DrawingUtils } = await import(url);
+                
+                resultsDiv.innerHTML += `<p>✅ ${name}: SUCCESS</p>`;
+                console.log(`${name} success:`, { PoseLandmarker, FilesetResolver, DrawingUtils });
+                return true;
+            } catch (error) {
+                resultsDiv.innerHTML += `<p>❌ ${name}: FAILED - ${error.message}</p>`;
+                console.error(`${name} failed:`, error);
+                return false;
+            }
+        }
+        
+        async function runTests() {
+            resultsDiv.innerHTML = '<p>Testing CDNs...</p>';
+            
+            const cdns = [
+                ['unpkg', 'https://unpkg.com/@mediapipe/tasks-vision@0.10.0/+esm'],
+                ['Skypack', 'https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0'],
+                ['jsDelivr', 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/+esm'],
+                ['esm.sh', 'https://esm.sh/@mediapipe/tasks-vision@0.10.0']
+            ];
+            
+            for (const [name, url] of cdns) {
+                await testCDN(name, url);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second between tests
+            }
+            
+            resultsDiv.innerHTML += '<p><strong>Test complete!</strong></p>';
+        }
+        
+        runTests();
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple MediaPipe Test</title>
+</head>
+<body>
+    <h1>Simple MediaPipe Test</h1>
+    <div id="status">Loading...</div>
+    <div id="details"></div>
+
+    <script type="module">
+        console.log('Starting simple MediaPipe test...');
+        
+        try {
+            console.log('Importing MediaPipe from Skypack...');
+            const { PoseLandmarker, FilesetResolver, DrawingUtils } = await import("https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0");
+            
+            console.log('MediaPipe imported successfully:', { PoseLandmarker, FilesetResolver, DrawingUtils });
+            
+            // Make it global
+            window.MediaPipe = {
+                FilesetResolver,
+                PoseLandmarker,
+                DrawingUtils
+            };
+            
+            document.getElementById('status').textContent = '✅ MediaPipe loaded successfully!';
+            document.getElementById('details').innerHTML = `
+                <p>PoseLandmarker: ${typeof PoseLandmarker}</p>
+                <p>FilesetResolver: ${typeof FilesetResolver}</p>
+                <p>DrawingUtils: ${typeof DrawingUtils}</p>
+                <p>window.MediaPipe: ${typeof window.MediaPipe}</p>
+            `;
+            
+            console.log('window.MediaPipe set:', window.MediaPipe);
+            
+            // Test event dispatch
+            console.log('Dispatching test event...');
+            window.dispatchEvent(new CustomEvent('mediapipeReady'));
+            console.log('Test event dispatched');
+            
+        } catch (error) {
+            console.error('MediaPipe import failed:', error);
+            document.getElementById('status').textContent = '❌ MediaPipe failed to load';
+            document.getElementById('details').innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    </script>
+    
+    <script>
+        // Listen for the event
+        window.addEventListener('mediapipeReady', () => {
+            console.log('Event received in main script!');
+            document.getElementById('status').textContent += ' - Event received!';
+        });
+    </script>
+</body>
+</html>

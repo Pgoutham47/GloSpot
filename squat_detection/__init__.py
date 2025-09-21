@@ -1,0 +1,1 @@
+# Squat Detection Package

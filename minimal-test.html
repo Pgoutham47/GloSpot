@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal MediaPipe Test</title>
+</head>
+<body>
+    <h1>Minimal MediaPipe Test</h1>
+    <div id="status">Loading...</div>
+
+    <script>
+        console.log('=== Minimal Test Starting ===');
+        
+        async function testMediaPipe() {
+            try {
+                console.log('Testing MediaPipe import...');
+                const { PoseLandmarker, FilesetResolver, DrawingUtils } = await import("https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0");
+                
+                console.log('MediaPipe imported successfully!');
+                document.getElementById('status').textContent = '✅ MediaPipe loaded successfully!';
+                
+                // Set global
+                window.MediaPipe = { PoseLandmarker, FilesetResolver, DrawingUtils };
+                console.log('window.MediaPipe set:', window.MediaPipe);
+                
+            } catch (error) {
+                console.error('MediaPipe import failed:', error);
+                document.getElementById('status').textContent = '❌ MediaPipe failed: ' + error.message;
+            }
+        }
+        
+        testMediaPipe();
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaPipe Test</title>
+</head>
+<body>
+    <h1>MediaPipe Loading Test</h1>
+    <div id="status">Loading MediaPipe...</div>
+    <div id="details"></div>
+
+    <script type="module">
+        async function testMediaPipe() {
+            const statusDiv = document.getElementById('status');
+            const detailsDiv = document.getElementById('details');
+            
+            try {
+                console.log('Starting MediaPipe test...');
+                
+                // Try Skypack CDN first
+                const { PoseLandmarker, FilesetResolver, DrawingUtils } = await import("https://cdn.skypack.dev/@mediapipe/tasks-vision@0.10.0");
+                
+                statusDiv.textContent = '✅ MediaPipe loaded successfully!';
+                detailsDiv.innerHTML = `
+                    <p>PoseLandmarker: ${typeof PoseLandmarker}</p>
+                    <p>FilesetResolver: ${typeof FilesetResolver}</p>
+                    <p>DrawingUtils: ${typeof DrawingUtils}</p>
+                `;
+                
+                console.log('MediaPipe loaded successfully:', { PoseLandmarker, FilesetResolver, DrawingUtils });
+                
+            } catch (error) {
+                console.error('MediaPipe loading failed:', error);
+                statusDiv.textContent = '❌ MediaPipe loading failed';
+                detailsDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                
+                // Try fallback
+                try {
+                    console.log('Trying fallback CDN...');
+                    const { PoseLandmarker, FilesetResolver, DrawingUtils } = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/+esm");
+                    
+                    statusDiv.textContent = '✅ MediaPipe loaded successfully (fallback)!';
+                    detailsDiv.innerHTML = `
+                        <p>PoseLandmarker: ${typeof PoseLandmarker}</p>
+                        <p>FilesetResolver: ${typeof FilesetResolver}</p>
+                        <p>DrawingUtils: ${typeof DrawingUtils}</p>
+                        <p>Source: jsDelivr CDN</p>
+                    `;
+                    
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                    statusDiv.textContent = '❌ All CDN attempts failed';
+                    detailsDiv.innerHTML = `
+                        <p>Primary error: ${error.message}</p>
+                        <p>Fallback error: ${fallbackError.message}</p>
+                    `;
+                }
+            }
+        }
+        
+        testMediaPipe();
+    </script>
+</body>
+</html>
