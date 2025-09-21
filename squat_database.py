@@ -6,7 +6,11 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-DATABASE_FILE = 'squat_results.db'
+# Use persistent storage for production (Vercel)
+if os.environ.get('VERCEL'):
+    DATABASE_FILE = '/tmp/squat_results.db'
+else:
+    DATABASE_FILE = 'squat_results.db'
 
 class SquatDatabase:
     def __init__(self):

@@ -1,4 +1,5 @@
 import sqlite3
+import os
 import logging
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
@@ -6,8 +7,15 @@ from typing import List, Dict, Any, Optional
 logger = logging.getLogger(__name__)
 
 class HeightDatabase:
-    def __init__(self, db_path: str = "height_results.db"):
-        self.db_path = db_path
+    def __init__(self, db_path: str = None):
+        if db_path is None:
+            # Use persistent storage for production (Vercel)
+            if os.environ.get('VERCEL'):
+                self.db_path = '/tmp/height_results.db'
+            else:
+                self.db_path = 'height_results.db'
+        else:
+            self.db_path = db_path
         self.connect()
         self.create_table()
     

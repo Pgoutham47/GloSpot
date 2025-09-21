@@ -4,8 +4,15 @@ from datetime import datetime
 import logging
 
 class VerticalJumpDatabase:
-    def __init__(self, db_path='vertical_jump_results.db'):
-        self.db_path = db_path
+    def __init__(self, db_path=None):
+        if db_path is None:
+            # Use persistent storage for production (Vercel)
+            if os.environ.get('VERCEL'):
+                self.db_path = '/tmp/vertical_jump_results.db'
+            else:
+                self.db_path = 'vertical_jump_results.db'
+        else:
+            self.db_path = db_path
         self.logger = logging.getLogger(__name__)
         self.init_database()
     
