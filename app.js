@@ -2,6 +2,9 @@
 class GloSpotApp {
     constructor() {
         this.currentPage = 'onboarding';
+        
+        // API Configuration - Auto-detect environment
+        this.apiConfig = this.getApiConfig();
         this.isOnline = navigator.onLine;
         this.recording = false;
         this.recordingStartTime = null;
@@ -10,6 +13,40 @@ class GloSpotApp {
         
         this.init();
         
+    }
+    
+    getApiConfig() {
+        // Auto-detect environment and set API base URLs
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const isVercel = window.location.hostname.includes('vercel.app');
+        
+        if (isLocalhost) {
+            // Development environment - use localhost ports
+            return {
+                verticalJump: 'http://localhost:5001',
+                squat: 'http://localhost:5002', 
+                height: 'http://localhost:5003',
+                pushup: 'http://localhost:5004'
+            };
+        } else if (isVercel) {
+            // Production environment - use Vercel URLs
+            const baseUrl = window.location.origin;
+            return {
+                verticalJump: baseUrl,
+                squat: baseUrl,
+                height: baseUrl, 
+                pushup: baseUrl
+            };
+        } else {
+            // Fallback - use current domain
+            const baseUrl = window.location.origin;
+            return {
+                verticalJump: baseUrl,
+                squat: baseUrl,
+                height: baseUrl,
+                pushup: baseUrl
+            };
+        }
     }
 
     init() {
@@ -1791,10 +1828,10 @@ class GloSpotApp {
         try {
             // Fetch data from all backends
             const [vjData, squatData, heightData, pushupData] = await Promise.all([
-                fetch('http://localhost:5001/api/vertical-jump-leaderboard').then(r => r.json()).catch(() => ({data: []})),
-                fetch('http://localhost:5002/api/squat-leaderboard').then(r => r.json()).catch(() => ({data: []})),
-                fetch('http://localhost:5003/api/height-leaderboard').then(r => r.json()).catch(() => ({data: []})),
-                fetch('http://localhost:5004/api/pushup-leaderboard').then(r => r.json()).catch(() => ({data: []}))
+                fetch(`${this.apiConfig.verticalJump}/api/vertical-jump-leaderboard`).then(r => r.json()).catch(() => ({data: []})),
+                fetch(`${this.apiConfig.squat}/api/squat-leaderboard`).then(r => r.json()).catch(() => ({data: []})),
+                fetch(`${this.apiConfig.height}/api/height-leaderboard`).then(r => r.json()).catch(() => ({data: []})),
+                fetch(`${this.apiConfig.pushup}/api/pushup-leaderboard`).then(r => r.json()).catch(() => ({data: []}))
             ]);
             
             console.log('Fetched data:', { vjData, squatData, heightData, pushupData });
@@ -1908,7 +1945,7 @@ class GloSpotApp {
         const results = document.getElementById('vj-results');
         
         try {
-            const response = await fetch('http://localhost:5001/api/vertical-jump-leaderboard');
+            const response = await fetch(`${this.apiConfig.verticalJump}/api/vertical-jump-leaderboard`);
             const data = await response.json();
             
             loading.style.display = 'none';
@@ -1941,7 +1978,7 @@ class GloSpotApp {
         const results = document.getElementById('squat-results');
         
         try {
-            const response = await fetch('http://localhost:5002/api/squat-leaderboard');
+            const response = await fetch(`${this.apiConfig.squat}/api/squat-leaderboard`);
             const data = await response.json();
             
             loading.style.display = 'none';
@@ -1974,7 +2011,7 @@ class GloSpotApp {
         const results = document.getElementById('height-results');
         
         try {
-            const response = await fetch('http://localhost:5003/api/height-leaderboard');
+            const response = await fetch(`${this.apiConfig.height}/api/height-leaderboard`);
             const data = await response.json();
             
             loading.style.display = 'none';
@@ -2007,7 +2044,7 @@ class GloSpotApp {
         const results = document.getElementById('pushup-results');
         
         try {
-            const response = await fetch('http://localhost:5004/api/pushup-leaderboard');
+            const response = await fetch(`${this.apiConfig.pushup}/api/pushup-leaderboard`);
             const data = await response.json();
             
             loading.style.display = 'none';
@@ -2299,7 +2336,7 @@ class GloSpotApp {
             formData.append('user_name', personName);
             formData.append('mode', mode);
 
-            const response = await fetch('http://localhost:5002/api/upload-squat-video', {
+            const response = await fetch(`${this.apiConfig.squat}/api/upload-squat-video`, {
                 method: 'POST',
                 body: formData
             });
@@ -2370,7 +2407,7 @@ class GloSpotApp {
         }
 
         try {
-            const response = await fetch('http://localhost:5002/api/save-squat-result', {
+            const response = await fetch(`${this.apiConfig.squat}/api/save-squat-result`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2410,7 +2447,7 @@ class GloSpotApp {
 
     async loadSquatLeaderboard() {
         try {
-            const response = await fetch('http://localhost:5002/api/squat-leaderboard');
+            const response = await fetch(`${this.apiConfig.squat}/api/squat-leaderboard`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -2562,7 +2599,7 @@ class GloSpotApp {
             formData.append('user_name', personName);
             formData.append('mode', mode);
 
-            const response = await fetch('http://localhost:5003/api/upload-height-video', {
+            const response = await fetch(`${this.apiConfig.height}/api/upload-height-video`, {
                 method: 'POST',
                 body: formData
             });
@@ -2637,7 +2674,7 @@ class GloSpotApp {
         }
 
         try {
-            const response = await fetch('http://localhost:5003/api/save-height-result', {
+            const response = await fetch(`${this.apiConfig.height}/api/save-height-result`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2739,7 +2776,7 @@ class GloSpotApp {
             formData.append('user_name', personName);
             formData.append('mode', mode);
 
-            const response = await fetch('http://localhost:5004/api/upload-pushup-video', {
+            const response = await fetch(`${this.apiConfig.pushup}/api/upload-pushup-video`, {
                 method: 'POST',
                 body: formData
             });
@@ -2807,7 +2844,7 @@ class GloSpotApp {
         }
 
         try {
-            const response = await fetch('http://localhost:5004/api/save-pushup-result', {
+            const response = await fetch(`${this.apiConfig.pushup}/api/save-pushup-result`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2848,7 +2885,7 @@ class GloSpotApp {
     // Height Leaderboard Functions
     async loadHeightLeaderboard() {
         try {
-            const response = await fetch('http://localhost:5003/api/height-leaderboard');
+            const response = await fetch(`${this.apiConfig.height}/api/height-leaderboard`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -2940,7 +2977,7 @@ class GloSpotApp {
     // Pushup Leaderboard Functions
     async loadPushupLeaderboard() {
         try {
-            const response = await fetch('http://localhost:5004/api/pushup-leaderboard');
+            const response = await fetch(`${this.apiConfig.pushup}/api/pushup-leaderboard`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -3057,7 +3094,7 @@ class GloSpotApp {
             formData.append('jump_style', referencePoint);
             formData.append('vid_format', videoFormat);
 
-            const response = await fetch('http://localhost:5001/api/upload-video', {
+            const response = await fetch(`${this.apiConfig.verticalJump}/api/upload-video`, {
                 method: 'POST',
                 body: formData
             });
@@ -3170,7 +3207,7 @@ class GloSpotApp {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/save-vertical-jump-result', {
+            const response = await fetch(`${this.apiConfig.verticalJump}/api/save-vertical-jump-result`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3195,7 +3232,7 @@ class GloSpotApp {
 
     async loadVerticalJumpLeaderboard() {
         try {
-            const response = await fetch('http://localhost:5001/api/vertical-jump-leaderboard');
+            const response = await fetch(`${this.apiConfig.verticalJump}/api/vertical-jump-leaderboard`);
             const result = await response.json();
             
             if (result.success) {

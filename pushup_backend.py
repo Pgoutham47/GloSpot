@@ -10,7 +10,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=['*'], methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+     allow_headers=['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials'],
+     supports_credentials=True)
 
 # Initialize database
 db = PushupDatabase()

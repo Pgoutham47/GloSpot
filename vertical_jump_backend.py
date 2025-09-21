@@ -8,7 +8,9 @@ from vertical_jump_database import VerticalJumpDatabase
 import json
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=['*'], methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+     allow_headers=['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials'],
+     supports_credentials=True)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

@@ -2,21 +2,25 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.py",
+      "src": "api_server.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "api_server.py"
+    },
+    {
       "src": "/(.*)",
-      "dest": "server.py"
+      "dest": "index.html"
     }
   ],
   "env": {
     "VERCEL": "1"
   },
   "functions": {
-    "server.py": {
+    "api_server.py": {
       "maxDuration": 30
     }
   }
